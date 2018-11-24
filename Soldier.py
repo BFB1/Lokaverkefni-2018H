@@ -32,9 +32,6 @@ class Soldier:
         # Búa til og skila afli hermansins breyttu fyrir vopn og heppni
         return weapon_modifier * self.power * random.uniform(0.75, 1.25)
 
-    def die(self):
-        self.faction.soldiers.remove(self)
-
     def __str__(self):
         return self.is_super  # TODO Þarf að útfæra þennan klasa
 
@@ -47,6 +44,7 @@ class Faction:
     def __init__(self, name, number_of_soldiers, number_of_super_soldiers, user_controlled=False):
         self.name = name
         self.userControlled = user_controlled
+        self.defeated = False
 
         self.soldiers = [Faction.generate_soldier(self, False) for i in range(number_of_soldiers)]
         self.soldiers += [Faction.generate_soldier(self, True) for i in range(number_of_super_soldiers)]
@@ -61,6 +59,11 @@ class Faction:
         if self.userControlled:
             raise NotImplemented
         return random.choice(self.soldiers)
+
+    def kia(self, soldier):
+        self.soldiers.remove(soldier)
+        if len(self.soldiers) == 0:
+            self.defeated = True
 
 
 if __name__ == '__main__':
