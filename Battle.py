@@ -7,8 +7,10 @@ import random
 def create_factions():
     factions = []
     for faction in ['Pessar', 'Hettir', 'Dreyrar']:
-        regular_soldiers = get_integer_from_user('Hversu margir venjulegir hermenn eiga að vera í ættbálkinum {}? '.format(faction))
-        super_soldiers = get_integer_from_user('Hversu margir super hermenn eiga að vera í ættbálkinum {}? '.format(faction))
+        regular_soldiers = get_integer_from_user(
+            'Hversu margir venjulegir hermenn eiga að vera í ættbálkinum {}? '.format(faction))
+        super_soldiers = get_integer_from_user(
+            'Hversu margir super hermenn eiga að vera í ættbálkinum {}? '.format(faction))
         factions.append(Soldier.Faction(faction, regular_soldiers, super_soldiers))
     return factions
 
@@ -19,6 +21,14 @@ def get_integer_from_user(prompt):
             return int(input(prompt))
         except ValueError:
             print('Hér þarf að slá inn tölu')
+
+
+def damage(soldier):
+    soldier.hp -= 1
+    if soldier.hp <= 0:
+        soldier.faction.kia(soldier)
+        if soldier.faction.defeated:
+            factions.remove(soldier.faction)
 
 
 def fight(battle_factions: list):
@@ -33,23 +43,19 @@ def fight(battle_factions: list):
             enemy_strike = enemy.calculate_strike()
 
             if soldier_strike < enemy_strike:
-                print('Hermaður frá {} með högg {} '
-                      'vinnur hermann frá {} með '
-                      'högg {}'.format(enemy.faction.name, round(enemy_strike, 2), soldier.faction.name, round(soldier_strike, 2)))
-                soldier.hp -= 1
-                if soldier.hp <= 0:
-                    soldier.faction.kia(soldier)
-                    if soldier.faction.defeated:
-                        factions.remove(soldier.faction)
+                damage(soldier)
+                return ('{} með högg {} '
+                        'vinnur {} með '
+                        'högg {}'.format(enemy.name, round(enemy_strike, 2), soldier.name,
+                                         round(soldier_strike, 2)))
             if soldier_strike > enemy_strike:
-                print('Hermaður frá {} með högg {} '
-                      'vinnur hermann frá {} með '
-                      'högg {}'.format(soldier.faction.name, round(enemy_strike, 2), enemy.faction.name, round(soldier_strike, 2)))
-                soldier.hp -= 1
-                if enemy.hp <= 0:
-                    enemy.faction.kia(enemy)
-                    if enemy.faction.defeated:
-                        factions.remove(soldier.faction)
+                damage(enemy)
+                return ('{} með högg {} '
+                        'vinnur {} með '
+                        'högg {}'.format(soldier.name, round(soldier_strike, 2), enemy.name,
+                                         round(enemy_strike, 2)))
+            else:
+                return 'Jafntefli'
 
 
 def main():
@@ -58,16 +64,15 @@ def main():
 
     while True:
         if len(factions) > 1:
-            fight(random.sample(factions, 2))
-            # TODO Fjarlæga faction úr lista þegar allir meðlimir eru dánir
+            try:
+                print(fight(random.sample(factions, 2)))
+            except IndexError:
+                print([faction.soldiers for faction in factions])
         else:
             print('Ættbálkurinn {} vann!'.format(factions[0].name))
             break
 
 
-factions = []
 if __name__ == '__main__':
+    factions = []
     main()
-
-
-

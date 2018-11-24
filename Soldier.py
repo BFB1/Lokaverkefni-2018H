@@ -32,11 +32,15 @@ class Soldier:
         # Búa til og skila afli hermansins breyttu fyrir vopn og heppni
         return weapon_modifier * self.power * random.uniform(0.75, 1.25)
 
+    @property
+    def name(self):
+        return '{}{}'.format('Super' if self.is_super else '', self.faction.name)
+
     def __str__(self):
-        return self.is_super  # TODO Þarf að útfæra þennan klasa
+        return 'Nafn = {}. Líf = {} Vopn = {}. Afl = {}'
 
     def __repr__(self):
-        return str(self.is_super)
+        return self.__str__()
 
 
 class Faction:
