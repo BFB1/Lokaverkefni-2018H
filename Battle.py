@@ -69,7 +69,7 @@ def main():
             except IndexError:
                 print([faction.soldiers for faction in factions])
         else:
-            print('Ættbálkurinn {} vann!'.format(factions[0].name))
+            return 'Ættbálkurinn {} vann!'.format(factions[0].name)
             break
 
 
