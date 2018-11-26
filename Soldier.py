@@ -37,7 +37,7 @@ class Soldier:
         return '{}{}'.format('Super' if self.is_super else '', self.faction.name)
 
     def __str__(self):
-        return 'Nafn = {}. Líf = {} Vopn = {}. Afl = {}'
+        return 'Nafn = {} Líf = {} Vopn = {} Afl = {}'.format(self.name, self.hp, self.weapon_type, self.power)
 
     def __repr__(self):
         return self.__str__()
@@ -61,13 +61,31 @@ class Faction:
 
     def pick_soldier(self):
         if self.userControlled:
-            raise NotImplemented
-        return random.choice(self.soldiers)
+            for index, soldier in enumerate(self.soldiers):
+                print('{}. {}'.format(index + 1, soldier))
+            while True:
+                try:
+                    selected_soldier = self.soldiers[get_integer_from_user('Sláðu inn tölu hermanns: ') + 1]
+                except IndexError:
+                    print('Enginn hermaður fannst með þessa tölu')
+                    continue
+                break
+            return selected_soldier
+        else:
+            return random.choice(self.soldiers)
 
     def kia(self, soldier):
         self.soldiers.remove(soldier)
         if len(self.soldiers) == 0:
             self.defeated = True
+
+
+def get_integer_from_user(prompt):
+    while True:
+        try:
+            return int(input(prompt))
+        except ValueError:
+            print('Hér þarf að slá inn tölu')
 
 
 if __name__ == '__main__':

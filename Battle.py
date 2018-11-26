@@ -2,6 +2,9 @@
 # 22/11/2018
 import Soldier
 import random
+import time
+
+from Soldier import get_integer_from_user
 
 
 def create_factions():
@@ -11,16 +14,9 @@ def create_factions():
             'Hversu margir venjulegir hermenn eiga að vera í ættbálkinum {}? '.format(faction))
         super_soldiers = get_integer_from_user(
             'Hversu margir super hermenn eiga að vera í ættbálkinum {}? '.format(faction))
-        factions.append(Soldier.Faction(faction, regular_soldiers, super_soldiers))
+        user_control = True if input('Vilt þú stjórna ættbálkinum[Y/N]? ').upper() == 'Y' else False
+        factions.append(Soldier.Faction(faction, regular_soldiers, super_soldiers, user_control))
     return factions
-
-
-def get_integer_from_user(prompt):
-    while True:
-        try:
-            return int(input(prompt))
-        except ValueError:
-            print('Hér þarf að slá inn tölu')
 
 
 def damage(soldier):
@@ -68,11 +64,11 @@ def main():
                 print(fight(random.sample(factions, 2)))
             except IndexError:
                 print([faction.soldiers for faction in factions])
+            time.sleep(2)
         else:
             return 'Ættbálkurinn {} vann!'.format(factions[0].name)
-            break
 
 
 if __name__ == '__main__':
     factions = []
-    main()
+    print(main())
