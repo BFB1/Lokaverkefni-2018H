@@ -8,6 +8,12 @@ from Soldier import get_integer_from_user
 
 
 def create_factions():
+    """
+    Þetta fall tekur inn frá notanda hversu marga hermenn hann vill í hverjum ættbálk og hvort hann vilji stjórna honum
+    og skilar lista með öllum ættbálkunum
+
+    :return: list[Faction]
+    """
     factions = []
     for faction in ['Pessar', 'Hettir', 'Dreyrar']:
         regular_soldiers = get_integer_from_user(
@@ -20,6 +26,13 @@ def create_factions():
 
 
 def damage(soldier):
+    """
+    Þetta fall sér um að draga frá heilsu hermanns og passa svo uppá að fjarlæga hann úr leiknum ef hann er dáinn
+    og ættbálkinn hans ef hann var síðasti hermaðurinn í ættbálkinum.
+
+    :param soldier: Soldier
+    :return: None
+    """
     soldier.hp -= 1
     if soldier.hp <= 0:
         soldier.faction.kia(soldier)
@@ -28,6 +41,15 @@ def damage(soldier):
 
 
 def fight(battle_factions: list):
+    """
+    Þetta fall framkvæmir slagsmál milli hermanna. Það tekur inn lista af ættbálkum sem eiga að slást.
+    Síðan eru ættbálkarnir beðnir um að velja hermann til þess að berjast og þeir settir í lista.
+    Svo eru valdir hermenn úr listanum og reiknað út höggið þeirra. Sá sem er með hærra högg vinnur.
+    Þá þarf að draga líf frá hinum hermanninum og svo er loks skilað streng sem segir hvað gerðist í slagsmálunum
+
+    :param battle_factions: list[Faction]
+    :return: str
+    """
     global factions
     soldiers = [faction.pick_soldier() for faction in battle_factions]
 
@@ -55,6 +77,11 @@ def fight(battle_factions: list):
 
 
 def main():
+    """
+    Aðalfallið. Setur upp og stýrir framvindu leiksins.
+
+    :return: None
+    """
     global factions
     factions = create_factions()
 
@@ -70,10 +97,13 @@ def main():
     while True:
         if len(factions) > 1:
             rounds += 1
+
             try:
                 print(fight(random.sample(factions, 2)))
             except IndexError:
                 print([faction.soldiers for faction in factions])
+
+            # Í hverri fimmtu umferð þá er prentuð út staða leiksins
             if rounds % 5 == 0:
                 print('\nStaðan')
                 for faction in factions:
@@ -87,11 +117,14 @@ def main():
                         print('Samanlögð líf súperhermanna: {}'.format(faction.total_hit_points_of_super_soldiers))
                         print('Samanlögð stærð ættbálksins: {}'.format(faction.total_army_size))
                         print('Samanlögð líf ættbálksins: {}\n'.format(faction.total_army_hit_points))
+
             time.sleep(1)
+
         else:
             return 'Ættbálkurinn {} vann!'.format(factions[0].name)
 
 
+# Þetta kallar á main() fallið ef þessi skrá er keyrð
 if __name__ == '__main__':
     factions = []
     print(main())
