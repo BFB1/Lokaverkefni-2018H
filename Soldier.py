@@ -79,6 +79,30 @@ class Faction:
         if len(self.soldiers) == 0:
             self.defeated = True
 
+    @property
+    def number_of_soldiers(self):
+        return len([soldier for soldier in self.soldiers if not soldier.is_super])
+
+    @property
+    def total_hit_points_of_soldiers(self):
+        return sum([soldier.hp for soldier in self.soldiers if not soldier.is_super])
+
+    @property
+    def number_of_super_soldiers(self):
+        return len([soldier for soldier in self.soldiers if soldier.is_super])
+
+    @property
+    def total_hit_points_of_super_soldiers(self):
+        return sum([soldier.hp for soldier in self.soldiers if soldier.is_super])
+
+    @property
+    def total_army_size(self):
+        return len(self.soldiers)
+
+    @property
+    def total_army_hit_points(self):
+        return sum([soldier.hp for soldier in self.soldiers])
+
 
 def get_integer_from_user(prompt):
     while True:
