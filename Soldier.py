@@ -114,7 +114,11 @@ class Faction:
                 print('{}. {}'.format(index + 1, soldier))
             while True:
                 try:
-                    selected_soldier = self.soldiers[get_integer_from_user('Sláðu inn tölu hermanns: ') + 1]
+                    select_index = get_integer_from_user('Sláðu inn tölu hermanns: ') - 1
+                    if 0 <= select_index < len(self.soldiers):
+                        selected_soldier = self.soldiers[select_index]
+                    else:
+                        raise IndexError
                 except IndexError:
                     print('Enginn hermaður fannst með þessa tölu')
                     continue
